@@ -14,6 +14,7 @@ import {
 } from "@dnd-kit/sortable";
 import { Moon, Sun } from "lucide-react";
 import { useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { Button } from "./components/ui/button";
 import {
   Dialog,
@@ -42,6 +43,11 @@ type DeleteBookmarkData = {
   title: string;
 };
 
+type CreateBookmarkData = {
+  title: string;
+  url: string;
+};
+
 const App = () => {
   const {
     folders,
@@ -62,8 +68,24 @@ const App = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingBookmark, setDeletingBookmark] =
     useState<DeleteBookmarkData | null>(null);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [newBookmark, setNewBookmark] = useState<CreateBookmarkData>({
+    title: "",
+    url: "",
+  });
   const [focusedBookmarkId, setFocusedBookmarkId] = useState<string | null>(
     null
+  );
+
+  useHotkeys(
+    "n",
+    (e) => {
+      if (!editDialogOpen && !deleteDialogOpen && !createDialogOpen) {
+        e.preventDefault();
+        setCreateDialogOpen(true);
+      }
+    },
+    { enableOnFormTags: true }
   );
 
   const handleEdit = (bookmark: chrome.bookmarks.BookmarkTreeNode) => {
@@ -98,6 +120,23 @@ const App = () => {
       title: bookmark.title,
     });
     setDeleteDialogOpen(true);
+  };
+
+  const handleCreateBookmark = () => {
+    if (newBookmark.title && newBookmark.url) {
+      chrome.bookmarks?.create(
+        {
+          parentId: selectedFolder,
+          title: newBookmark.title,
+          url: newBookmark.url,
+        },
+        () => {
+          setCreateDialogOpen(false);
+          setNewBookmark({ title: "", url: "" });
+          refreshBookmarks();
+        }
+      );
+    }
   };
 
   useBookmarkShortcuts({
@@ -294,6 +333,55 @@ const App = () => {
               <Button variant="destructive" onClick={handleConfirmDelete}>
                 Delete
               </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Dialog */}
+      <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create Bookmark</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <label htmlFor="new-title" className="text-sm font-medium">
+                Title
+              </label>
+              <Input
+                id="new-title"
+                value={newBookmark.title}
+                onChange={(e) =>
+                  setNewBookmark((prev) => ({ ...prev, title: e.target.value }))
+                }
+                autoFocus
+              />
+            </div>
+            <div className="grid gap-2">
+              <label htmlFor="new-url" className="text-sm font-medium">
+                URL
+              </label>
+              <Input
+                id="new-url"
+                value={newBookmark.url}
+                onChange={(e) =>
+                  setNewBookmark((prev) => ({ ...prev, url: e.target.value }))
+                }
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            <DialogClose asChild>
+              <Button
+                variant="outline"
+                onClick={() => setNewBookmark({ title: "", url: "" })}
+              >
+                Cancel
+              </Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button onClick={handleCreateBookmark}>Create</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
