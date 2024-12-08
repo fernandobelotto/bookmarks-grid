@@ -1,28 +1,35 @@
-import { useBookmarks } from "./hooks/useBookmarks";
-import { useFavicons } from "./hooks/useFavicons";
-import { useSearchShortcut } from "./hooks/useSearchShortcut";
-import { useBookmarkShortcuts } from "./hooks/useBookmarkShortcuts";
-import { useDarkMode } from "./hooks/useDarkMode";
-import { Tabs, TabsList, TabsTrigger } from "./components/ui/tabs";
-import { Input } from "./components/ui/input";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  rectSortingStrategy,
+  SortableContext,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
+import { Moon, Sun } from "lucide-react";
+import { useState } from "react";
 import { Button } from "./components/ui/button";
 import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "./components/ui/context-menu";
-import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogDescription,
-  DialogClose,
 } from "./components/ui/dialog";
-import { Pencil, Trash2, Moon, Sun } from "lucide-react";
-import { useState } from "react";
+import { Input } from "./components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "./components/ui/tabs";
+import { useBookmarks } from "./hooks/useBookmarks";
+import { useBookmarkShortcuts } from "./hooks/useBookmarkShortcuts";
+import { useDarkMode } from "./hooks/useDarkMode";
+import { useSearchShortcut } from "./hooks/useSearchShortcut";
+import { SortableBookmark } from "./components/SortableBookmark";
 
 type EditBookmarkData = {
   id: string;
@@ -46,7 +53,6 @@ const App = () => {
     refreshBookmarks,
   } = useBookmarks();
 
-  const { getFaviconUrl, handleFaviconError } = useFavicons();
   const { searchInputRef } = useSearchShortcut();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
@@ -113,6 +119,30 @@ const App = () => {
     }
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const newIndex = filteredBookmarks.findIndex((b) => b.id === over.id);
+
+      // Update the order in Chrome bookmarks
+      chrome.bookmarks
+        .move(active.id as string, {
+          index: newIndex,
+        })
+        .then(() => {
+          refreshBookmarks();
+        });
+    }
+  };
+
   return (
     <div className="min-h-screen h-screen w-screen bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
       <div className="w-full h-full p-4 flex flex-col">
@@ -171,51 +201,28 @@ const App = () => {
 
         {/* Bookmarks Grid */}
         <div className="flex-1 overflow-auto p-6">
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] auto-rows-[40px] gap-4">
-            {filteredBookmarks.map((bookmark) => (
-              <ContextMenu key={bookmark.id}>
-                <ContextMenuTrigger asChild>
-                  <a
-                    href={bookmark.url}
-                    className="group bg-white dark:bg-gray-800 h-[40px] w-full rounded shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-3 px-4 overflow-hidden focus:outline-none focus:ring-2 focus:ring-slate-400"
-                    onClick={(e) => {
-                      if (e.button === 2) {
-                        e.preventDefault();
-                      }
-                    }}
-                    onFocus={() => setFocusedBookmarkId(bookmark.id)}
-                    onBlur={() => setFocusedBookmarkId(null)}
-                    onMouseEnter={() => setFocusedBookmarkId(bookmark.id)}
-                    onMouseLeave={() => setFocusedBookmarkId(null)}
-                  >
-                    <img
-                      src={getFaviconUrl(bookmark.url!)}
-                      alt=""
-                      className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform duration-200"
-                      onError={(e) => handleFaviconError(e, bookmark.url!)}
-                      loading="lazy"
-                    />
-                    <span className="text-sm text-gray-700 dark:text-gray-200 truncate flex-1">
-                      {bookmark.title}
-                    </span>
-                  </a>
-                </ContextMenuTrigger>
-                <ContextMenuContent className="w-48">
-                  <ContextMenuItem onClick={() => handleEdit(bookmark)}>
-                    <Pencil className="mr-2 h-4 w-4" />
-                    Edit
-                  </ContextMenuItem>
-                  <ContextMenuItem
-                    onClick={() => handleDelete(bookmark)}
-                    className="text-red-600 focus:text-red-600"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
-                  </ContextMenuItem>
-                </ContextMenuContent>
-              </ContextMenu>
-            ))}
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={filteredBookmarks.map((b) => b.id)}
+              strategy={rectSortingStrategy}
+            >
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] auto-rows-[40px] gap-4">
+                {filteredBookmarks.map((bookmark) => (
+                  <SortableBookmark
+                    key={bookmark.id}
+                    bookmark={bookmark}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                    setFocusedBookmarkId={setFocusedBookmarkId}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
         </div>
       </div>
 

@@ -15,6 +15,7 @@ declare namespace chrome {
     type Callback = (results: BookmarkTreeNode[]) => void;
     type UpdateCallback = () => void;
     type RemoveCallback = () => void;
+    type MoveCallback = () => void;
 
     interface UpdateChanges {
       title?: string;
@@ -28,5 +29,10 @@ declare namespace chrome {
       callback?: UpdateCallback
     ): void;
     export function remove(id: string, callback?: RemoveCallback): void;
+    export function move(
+      id: string,
+      destination: { index?: number },
+      callback?: MoveCallback
+    ): Promise<void>;
   }
 }
