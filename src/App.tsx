@@ -185,6 +185,8 @@ const App = () => {
                     }}
                     onFocus={() => setFocusedBookmarkId(bookmark.id)}
                     onBlur={() => setFocusedBookmarkId(null)}
+                    onMouseEnter={() => setFocusedBookmarkId(bookmark.id)}
+                    onMouseLeave={() => setFocusedBookmarkId(null)}
                   >
                     <img
                       src={getFaviconUrl(bookmark.url!)}
