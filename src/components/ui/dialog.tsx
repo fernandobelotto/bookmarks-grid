@@ -59,6 +59,8 @@ const DialogContent = React.forwardRef<
           disabled:pointer-events-none
           data-[state=open]:bg-white
           data-[state=open]:text-muted-foreground
+          px-3
+          py-2
           `}
       >
         <X className="h-5 w-5 text-black" />

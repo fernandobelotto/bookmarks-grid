@@ -2,6 +2,7 @@ import { useBookmarks } from "./hooks/useBookmarks";
 import { useFavicons } from "./hooks/useFavicons";
 import { useSearchShortcut } from "./hooks/useSearchShortcut";
 import { useBookmarkShortcuts } from "./hooks/useBookmarkShortcuts";
+import { useDarkMode } from "./hooks/useDarkMode";
 import { Tabs, TabsList, TabsTrigger } from "./components/ui/tabs";
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
@@ -20,7 +21,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "./components/ui/dialog";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Moon, Sun } from "lucide-react";
 import { useState } from "react";
 
 type EditBookmarkData = {
@@ -47,6 +48,7 @@ const App = () => {
 
   const { getFaviconUrl, handleFaviconError } = useFavicons();
   const { searchInputRef } = useSearchShortcut();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingBookmark, setEditingBookmark] =
@@ -112,9 +114,9 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen h-screen w-screen bg-gray-50 flex flex-col overflow-hidden">
+    <div className="min-h-screen h-screen w-screen bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
       <div className="w-full h-full p-4 flex flex-col">
-        {/* Header with Tabs and Search */}
+        {/* Header with Tabs, Search, and Dark Mode Toggle */}
         <div className="flex-none">
           <div className="flex items-center justify-between gap-4">
             <div className="flex-1">
@@ -128,7 +130,7 @@ const App = () => {
                     <TabsTrigger
                       key={folder.id}
                       value={folder.id}
-                      className="m-1 bg-white data-[state=active]:bg-slate-800 border-slate-400 data-[state=active]:text-white"
+                      className="m-1 bg-white dark:bg-gray-800 data-[state=active]:bg-slate-800 dark:data-[state=active]:bg-slate-600 border-slate-400 data-[state=active]:text-white"
                     >
                       {folder.title}
                     </TabsTrigger>
@@ -137,15 +139,32 @@ const App = () => {
               </Tabs>
             </div>
 
-            {/* Search Bar */}
-            <div className="w-[300px]">
-              <Input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Search bookmarks... (⌘K)"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+            <div className="flex items-center gap-4">
+              {/* Search Bar */}
+              <div className="w-[300px]">
+                <Input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search bookmarks... (⌘K)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="dark:bg-gray-800 dark:text-gray-100"
+                />
+              </div>
+
+              {/* Dark Mode Toggle */}
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={toggleDarkMode}
+                className="dark:bg-gray-800 dark:hover:bg-gray-700"
+              >
+                {isDarkMode ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )}
+              </Button>
             </div>
           </div>
         </div>
@@ -158,7 +177,7 @@ const App = () => {
                 <ContextMenuTrigger asChild>
                   <a
                     href={bookmark.url}
-                    className="group bg-white h-[40px] w-full rounded shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-3 px-4 overflow-hidden focus:outline-none focus:ring-2 focus:ring-slate-400"
+                    className="group bg-white dark:bg-gray-800 h-[40px] w-full rounded shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-3 px-4 overflow-hidden focus:outline-none focus:ring-2 focus:ring-slate-400"
                     onClick={(e) => {
                       if (e.button === 2) {
                         e.preventDefault();
@@ -174,7 +193,7 @@ const App = () => {
                       onError={(e) => handleFaviconError(e, bookmark.url!)}
                       loading="lazy"
                     />
-                    <span className="text-sm text-gray-700 truncate flex-1">
+                    <span className="text-sm text-gray-700 dark:text-gray-200 truncate flex-1">
                       {bookmark.title}
                     </span>
                   </a>
@@ -250,11 +269,14 @@ const App = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete Bookmark</DialogTitle>
-            <DialogDescription>
+          </DialogHeader>
+          <div className="grid py-4">
+            <p className="text-lg text-gray-700 dark:text-gray-200">
               Are you sure you want to delete "{deletingBookmark?.title}"? This
               action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
+            </p>
+          </div>
+
           <DialogFooter className="gap-2">
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
