@@ -314,14 +314,17 @@ const App = () => {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Delete Bookmark</DialogTitle>
           </DialogHeader>
-          <div className="grid py-4">
+          <div className="py-4 max-h-[200px] overflow-y-auto">
             <p className="text-lg text-gray-700 dark:text-gray-200">
-              Are you sure you want to delete "{deletingBookmark?.title}"? This
-              action cannot be undone.
+              Are you sure you want to delete "
+              <span className="inline-block align-bottom line-clamp-3">
+                {deletingBookmark?.title}
+              </span>
+              "? This action cannot be undone.
             </p>
           </div>
 
