@@ -16,6 +16,7 @@ declare namespace chrome {
     type UpdateCallback = () => void;
     type RemoveCallback = () => void;
     type MoveCallback = () => void;
+    type CreateCallback = () => void;
 
     interface UpdateChanges {
       title?: string;
@@ -33,6 +34,14 @@ declare namespace chrome {
       id: string,
       destination: { index?: number },
       callback?: MoveCallback
+    ): Promise<void>;
+    export function create(
+      details: {
+        parentId: string;
+        title: string;
+        url: string;
+      },
+      callback?: CreateCallback
     ): Promise<void>;
   }
 }

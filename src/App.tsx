@@ -85,7 +85,10 @@ const App = () => {
         setCreateDialogOpen(true);
       }
     },
-    { enableOnFormTags: true }
+    {
+      enabled: !editDialogOpen && !deleteDialogOpen && !createDialogOpen,
+      enableOnFormTags: false,
+    }
   );
 
   const handleEdit = (bookmark: chrome.bookmarks.BookmarkTreeNode) => {
@@ -124,7 +127,7 @@ const App = () => {
 
   const handleCreateBookmark = () => {
     if (newBookmark.title && newBookmark.url) {
-      chrome.bookmarks?.create(
+      chrome.bookmarks.create(
         {
           parentId: selectedFolder,
           title: newBookmark.title,

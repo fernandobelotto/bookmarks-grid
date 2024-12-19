@@ -30,7 +30,10 @@ export const useBookmarkShortcuts = ({
         }
       }
     },
-    [focusedBookmarkId, deleteDialogOpen, editDialogOpen, filteredBookmarks]
+    {
+      enabled: !deleteDialogOpen && !editDialogOpen,
+      enableOnFormTags: false,
+    }
   );
 
   useHotkeys(
@@ -46,6 +49,9 @@ export const useBookmarkShortcuts = ({
         }
       }
     },
-    [focusedBookmarkId, deleteDialogOpen, editDialogOpen, filteredBookmarks]
+    {
+      enabled: !deleteDialogOpen && !editDialogOpen,
+      enableOnFormTags: false,
+    }
   );
 };
