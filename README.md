@@ -1,72 +1,102 @@
-# Bookmarks Grid View - Chrome Extension
+# Bookmarks Grid
 
-A modern Chrome extension that displays your bookmarks in a beautiful grid layout with powerful search and management capabilities.
+A Chrome extension that replaces your new tab page with a fast, keyboard-driven bookmark manager in a beautiful grid layout.
+
+![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?logo=googlechrome&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?logo=tailwindcss&logoColor=white)
 
 ## Features
 
-- 📱 **Grid Layout**: View your bookmarks in a clean, responsive grid layout
-- 🔍 **Quick Search**: Search through your bookmarks with instant filtering (⌘K / Ctrl+K shortcut)
-- 📂 **Folder Organization**: Navigate through your bookmark folders using tabs
-- 🖼️ **Smart Favicons**: Automatic favicon loading with multiple fallback sources
-- ✏️ **Easy Editing**: Right-click context menu for quick editing and deletion
-- 🎨 **Modern UI**: Built with shadcn/ui components for a beautiful, consistent look
-- ⚡ **Fast Performance**: Optimized for speed and responsiveness
+- **Grid layout** — responsive, auto-filling grid that scales to your screen
+- **Instant search** — filter bookmarks by title or URL in real time (`⌘K` / `Ctrl+K`)
+- **Folder tabs** — navigate between top-level bookmark folders with a single click
+- **Drag & drop** — reorder bookmarks within a folder (mouse or keyboard)
+- **Full CRUD** — create, edit, and delete bookmarks via modal, context menu, or keyboard shortcuts
+- **Smart favicons** — auto-loads favicons with DuckDuckGo → Google fallback chain
+- **Dark mode** — toggle with a button, persisted across sessions
+- **Keyboard-first** — every action has a shortcut, no mouse required
 
-## Installation
+## Keyboard Shortcuts
 
-### Development Setup
+| Shortcut | Action |
+|---|---|
+| `⌘K` / `Ctrl+K` | Focus search |
+| `N` | New bookmark |
+| `E` | Edit hovered bookmark |
+| `Backspace` | Delete hovered bookmark |
+| Arrow keys | Move bookmark while dragging |
 
-1. Clone the repository:
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Install & Build
 
 ```bash
-git clone https://github.com/yourusername/bookmarks-extension.git
-cd bookmarks-extension
-```
-
-2. Install dependencies:
-
-```bash
+git clone https://github.com/fernandobelotto/bookmarks-grid.git
+cd bookmarks-grid
 npm install
-```
-
-3. Start the development server:
-
-```bash
-npm run dev
-```
-
-### Loading the Extension in Chrome
-
-1. Build the extension:
-
-```bash
 npm run build
 ```
 
-2. Open Chrome and navigate to `chrome://extensions/`
-3. Enable "Developer mode" in the top right corner
-4. Click "Load unpacked" and select the `dist` directory from your project folder
+### Load in Chrome
 
-The extension will now replace your new tab page with the bookmarks grid view.
+1. Go to `chrome://extensions/`
+2. Enable **Developer mode** (top-right toggle)
+3. Click **Load unpacked** → select the `dist/` folder
 
-## Development
+Your new tab page is now the bookmarks grid.
 
-- `npm run dev` - Starts the development server with hot reload
-- `npm run build` - Builds the extension for production
-- `npm run lint` - Runs the linter
+### Development
+
+```bash
+npm run dev    # watch mode — rebuilds on every file change
+npm run build  # production build
+npm run lint   # ESLint
+```
+
+After running `npm run dev`, reload the extension in `chrome://extensions/` to pick up changes.
+
+## Project Structure
+
+```
+src/
+├── App.tsx                     # Root: layout, dialogs, drag-drop orchestration
+├── main.tsx                    # React entry point
+├── components/
+│   ├── SortableBookmark.tsx    # Bookmark card with context menu & drag handle
+│   └── ui/                     # shadcn/ui primitives (dialog, tabs, input…)
+├── hooks/
+│   ├── useBookmarks.ts         # Load & filter bookmarks from Chrome API
+│   ├── useBookmarkShortcuts.ts # E / Backspace hotkeys
+│   ├── useDarkMode.ts          # Dark mode toggle + localStorage persistence
+│   ├── useFavicons.ts          # Favicon fetching with fallback chain
+│   └── useSearchShortcut.ts   # ⌘K / Ctrl+K focus
+├── lib/
+│   └── utils.ts                # cn() — clsx + tailwind-merge
+└── types/
+    └── chrome.d.ts             # Chrome Bookmarks API type definitions
+public/
+└── manifest.json               # Chrome Extension Manifest V3
+```
 
 ## Tech Stack
 
-- React + TypeScript
-- Vite
-- Tailwind CSS
-- shadcn/ui Components
-- Chrome Extensions API
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+| Layer | Library |
+|---|---|
+| Framework | React 18 + TypeScript 5 |
+| Build | Vite 5 |
+| Styling | Tailwind CSS 3 + shadcn/ui |
+| Components | Radix UI primitives |
+| Drag & Drop | @dnd-kit/core + @dnd-kit/sortable |
+| Shortcuts | react-hotkeys-hook |
+| Icons | Lucide React |
 
 ## License
 
-MIT License - feel free to use this project however you'd like.
+MIT
