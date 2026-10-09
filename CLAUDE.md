@@ -7,9 +7,9 @@ Chrome Extension (Manifest V3) that replaces the new tab page with a keyboard-dr
 ## Commands
 
 ```bash
-npm run dev      # watch mode (vite build --watch) — reload extension manually after changes
-npm run build    # tsc + vite build → outputs to dist/
-npm run lint     # ESLint strict mode
+pnpm dev         # watch mode (vite build --watch) — reload extension manually after changes
+pnpm build       # tsc + vite build → outputs to dist/
+pnpm lint        # ESLint strict mode
 ```
 
 ## Architecture

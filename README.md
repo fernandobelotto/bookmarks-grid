@@ -33,15 +33,15 @@ A Chrome extension that replaces your new tab page with a fast, keyboard-driven 
 ### Prerequisites
 
 - Node.js 18+
-- npm
+- pnpm
 
 ### Install & Build
 
 ```bash
 git clone https://github.com/fernandobelotto/bookmarks-grid.git
 cd bookmarks-grid
-npm install
-npm run build
+pnpm install
+pnpm build
 ```
 
 ### Load in Chrome
@@ -55,12 +55,12 @@ Your new tab page is now the bookmarks grid.
 ### Development
 
 ```bash
-npm run dev    # watch mode — rebuilds on every file change
-npm run build  # production build
-npm run lint   # ESLint
+pnpm dev        # watch mode — rebuilds on every file change
+pnpm build    # production build
+pnpm lint     # ESLint
 ```
 
-After running `npm run dev`, reload the extension in `chrome://extensions/` to pick up changes.
+After running `pnpm dev`, reload the extension in `chrome://extensions/` to pick up changes.
 
 ## Project Structure
 
