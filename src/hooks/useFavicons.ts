@@ -42,9 +42,7 @@ export const useFavicons = () => {
       const target = e.target as HTMLImageElement;
 
       // If DuckDuckGo's favicon fails, try Google's service
-      if (!target.src.includes("google.com")) {
-        target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-      } else {
+      if (target.src.includes("google.com")) {
         // If Google's service also fails, use our custom fallback
         target.src = defaultFavicon;
         // Cache the fallback to prevent further requests
@@ -52,6 +50,8 @@ export const useFavicons = () => {
           ...prev,
           [domain]: defaultFavicon,
         }));
+      } else {
+        target.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
       }
     } catch {
       const target = e.target as HTMLImageElement;

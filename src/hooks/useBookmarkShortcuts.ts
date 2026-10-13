@@ -1,13 +1,13 @@
 import { useHotkeys } from "react-hotkeys-hook";
 
-type UseBookmarkShortcutsProps = {
+interface UseBookmarkShortcutsProps {
   focusedBookmarkId: string | null;
   deleteDialogOpen: boolean;
   editDialogOpen: boolean;
   filteredBookmarks: chrome.bookmarks.BookmarkTreeNode[];
   onEdit: (bookmark: chrome.bookmarks.BookmarkTreeNode) => void;
   onDelete: (bookmark: chrome.bookmarks.BookmarkTreeNode) => void;
-};
+}
 
 export const useBookmarkShortcuts = ({
   focusedBookmarkId,
@@ -31,8 +31,8 @@ export const useBookmarkShortcuts = ({
       }
     },
     {
-      enabled: !deleteDialogOpen && !editDialogOpen,
       enableOnFormTags: false,
+      enabled: !deleteDialogOpen && !editDialogOpen,
     }
   );
 
@@ -50,8 +50,8 @@ export const useBookmarkShortcuts = ({
       }
     },
     {
-      enabled: !deleteDialogOpen && !editDialogOpen,
       enableOnFormTags: false,
+      enabled: !deleteDialogOpen && !editDialogOpen,
     }
   );
 };

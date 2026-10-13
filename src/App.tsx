@@ -1,7 +1,7 @@
+import type { DragEndEvent } from "@dnd-kit/core";
 import {
   closestCenter,
   DndContext,
-  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -15,6 +15,8 @@ import {
 import { Moon, Sun } from "lucide-react";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+
+import { SortableBookmark } from "./components/SortableBookmark";
 import { Button } from "./components/ui/button";
 import {
   Dialog,
@@ -30,23 +32,22 @@ import { useBookmarks } from "./hooks/useBookmarks";
 import { useBookmarkShortcuts } from "./hooks/useBookmarkShortcuts";
 import { useDarkMode } from "./hooks/useDarkMode";
 import { useSearchShortcut } from "./hooks/useSearchShortcut";
-import { SortableBookmark } from "./components/SortableBookmark";
 
-type EditBookmarkData = {
+interface EditBookmarkData {
   id: string;
   title: string;
   url: string;
-};
+}
 
-type DeleteBookmarkData = {
+interface DeleteBookmarkData {
   id: string;
   title: string;
-};
+}
 
-type CreateBookmarkData = {
+interface CreateBookmarkData {
   title: string;
   url: string;
-};
+}
 
 const App = () => {
   const {
@@ -86,8 +87,8 @@ const App = () => {
       }
     },
     {
-      enabled: !editDialogOpen && !deleteDialogOpen && !createDialogOpen,
       enableOnFormTags: false,
+      enabled: !editDialogOpen && !deleteDialogOpen && !createDialogOpen,
     }
   );
 
@@ -143,12 +144,12 @@ const App = () => {
   };
 
   useBookmarkShortcuts({
-    focusedBookmarkId,
     deleteDialogOpen,
     editDialogOpen,
     filteredBookmarks,
-    onEdit: handleEdit,
+    focusedBookmarkId,
     onDelete: handleDelete,
+    onEdit: handleEdit,
   });
 
   const handleConfirmDelete = () => {
@@ -186,8 +187,8 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen h-screen w-screen bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
-      <div className="w-full h-full p-4 flex flex-col">
+    <div className="flex h-screen min-h-screen w-screen flex-col overflow-hidden bg-gray-50 dark:bg-gray-900">
+      <div className="flex h-full w-full flex-col p-4">
         {/* Header with Tabs, Search, and Dark Mode Toggle */}
         <div className="flex-none">
           <div className="flex items-center justify-between gap-4">
@@ -197,12 +198,12 @@ const App = () => {
                 onValueChange={setSelectedFolder}
                 className="bg-transparent"
               >
-                <TabsList className="w-full justify-start h-auto p-1 bg-transparent">
+                <TabsList className="h-auto w-full justify-start bg-transparent p-1">
                   {folders.map((folder) => (
                     <TabsTrigger
                       key={folder.id}
                       value={folder.id}
-                      className="m-1 bg-white dark:bg-gray-800 data-[state=active]:bg-slate-800 dark:data-[state=active]:bg-slate-600 border-slate-400 data-[state=active]:text-white"
+                      className="m-1 border-slate-400 bg-white data-[state=active]:bg-slate-800 data-[state=active]:text-white dark:bg-gray-800 dark:data-[state=active]:bg-slate-600"
                     >
                       {folder.title}
                     </TabsTrigger>
@@ -252,7 +253,7 @@ const App = () => {
               items={filteredBookmarks.map((b) => b.id)}
               strategy={rectSortingStrategy}
             >
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] auto-rows-[40px] gap-4">
+              <div className="grid auto-rows-[40px] grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
                 {filteredBookmarks.map((bookmark) => (
                   <SortableBookmark
                     key={bookmark.id}
@@ -321,10 +322,10 @@ const App = () => {
           <DialogHeader>
             <DialogTitle>Delete Bookmark</DialogTitle>
           </DialogHeader>
-          <div className="py-4 max-h-[200px] overflow-y-auto">
+          <div className="max-h-[200px] overflow-y-auto py-4">
             <p className="text-lg text-gray-700 dark:text-gray-200">
               Are you sure you want to delete "
-              <span className="inline-block align-bottom line-clamp-3">
+              <span className="line-clamp-3 inline-block align-bottom">
                 {deletingBookmark?.title}
               </span>
               "? This action cannot be undone.

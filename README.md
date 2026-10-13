@@ -2,10 +2,7 @@
 
 A Chrome extension that replaces your new tab page with a fast, keyboard-driven bookmark manager in a beautiful grid layout.
 
-![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?logo=googlechrome&logoColor=white)
-![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?logo=tailwindcss&logoColor=white)
+![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?logo=googlechrome&logoColor=white) ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?logo=tailwindcss&logoColor=white)
 
 ## Features
 
@@ -20,13 +17,13 @@ A Chrome extension that replaces your new tab page with a fast, keyboard-driven 
 
 ## Keyboard Shortcuts
 
-| Shortcut | Action |
-|---|---|
-| `⌘K` / `Ctrl+K` | Focus search |
-| `N` | New bookmark |
-| `E` | Edit hovered bookmark |
-| `Backspace` | Delete hovered bookmark |
-| Arrow keys | Move bookmark while dragging |
+| Shortcut        | Action                       |
+| --------------- | ---------------------------- |
+| `⌘K` / `Ctrl+K` | Focus search                 |
+| `N`             | New bookmark                 |
+| `E`             | Edit hovered bookmark        |
+| `Backspace`     | Delete hovered bookmark      |
+| Arrow keys      | Move bookmark while dragging |
 
 ## Getting Started
 
@@ -87,15 +84,15 @@ public/
 
 ## Tech Stack
 
-| Layer | Library |
-|---|---|
-| Framework | React 18 + TypeScript 5 |
-| Build | Vite 5 |
-| Styling | Tailwind CSS 3 + shadcn/ui |
-| Components | Radix UI primitives |
+| Layer       | Library                           |
+| ----------- | --------------------------------- |
+| Framework   | React 18 + TypeScript 5           |
+| Build       | Vite 5                            |
+| Styling     | Tailwind CSS 3 + shadcn/ui        |
+| Components  | Radix UI primitives               |
 | Drag & Drop | @dnd-kit/core + @dnd-kit/sortable |
-| Shortcuts | react-hotkeys-hook |
-| Icons | Lucide React |
+| Shortcuts   | react-hotkeys-hook                |
+| Icons       | Lucide React                      |
 
 ## License
 

@@ -1,23 +1,13 @@
-import { defineConfig } from "vite";
+import path from "node:path";
+
 import react from "@vitejs/plugin-react";
-import path from "path";
+import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-
   build: {
-    outDir: "dist",
     emptyOutDir: true,
-    watch: {
-      include: ["src/**", "public/**"],
-      exclude: ["node_modules/**", "dist/**"],
-    },
+    outDir: "dist",
     rollupOptions: {
       // external: ["@/components/ui/tabs", "@/components/ui/input"],
       output: {
@@ -26,14 +16,24 @@ export default defineConfig({
         assetFileNames: `assets/[name].[ext]`,
       },
     },
-  },
-  publicDir: "public",
-  server: {
-    port: 3000,
-    open: true,
     watch: {
-      usePolling: true,
+      exclude: ["node_modules/**", "dist/**"],
+      include: ["src/**", "public/**"],
+    },
+  },
+  plugins: [react()],
+  publicDir: "public",
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  server: {
+    open: true,
+    port: 3000,
+    watch: {
       interval: 1000,
+      usePolling: true,
     },
   },
 });

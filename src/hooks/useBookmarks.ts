@@ -8,14 +8,16 @@ export const useBookmarks = () => {
   const [selectedFolder, setSelectedFolder] = useState<string>("1");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const flattenBookmarks = useCallback((nodes: Bookmark[]): Bookmark[] => {
-    return nodes.reduce<Bookmark[]>((acc, node) => {
-      if (node.children) {
-        return [...acc, node, ...flattenBookmarks(node.children)];
-      }
-      return [...acc, node];
-    }, []);
-  }, []);
+  const flattenBookmarks = useCallback(
+    (nodes: Bookmark[]): Bookmark[] =>
+      nodes.reduce<Bookmark[]>((acc, node) => {
+        if (node.children) {
+          return [...acc, node, ...flattenBookmarks(node.children)];
+        }
+        return [...acc, node];
+      }, []),
+    []
+  );
 
   const loadBookmarks = useCallback(() => {
     chrome.bookmarks.getTree(
@@ -42,12 +44,12 @@ export const useBookmarks = () => {
 
   return {
     bookmarks,
-    folders,
-    selectedFolder,
-    setSelectedFolder,
-    searchQuery,
-    setSearchQuery,
     filteredBookmarks,
+    folders,
     refreshBookmarks: loadBookmarks,
+    searchQuery,
+    selectedFolder,
+    setSearchQuery,
+    setSelectedFolder,
   };
 };
