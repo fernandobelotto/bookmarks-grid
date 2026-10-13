@@ -1,13 +1,14 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Pencil, Trash2 } from "lucide-react";
+
+import { useFavicons } from "../hooks/useFavicons";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from "./ui/context-menu";
-import { useFavicons } from "../hooks/useFavicons";
 
 export const SortableBookmark = ({
   bookmark,
@@ -30,9 +31,9 @@ export const SortableBookmark = ({
   } = useSortable({ id: bookmark.id });
 
   const style = {
+    opacity: isDragging ? 0.5 : 1,
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
   };
 
   const { getFaviconUrl, handleFaviconError } = useFavicons();
@@ -42,13 +43,13 @@ export const SortableBookmark = ({
       <ContextMenuTrigger asChild>
         <div
           style={style}
-          className="group bg-white dark:bg-gray-800 h-[40px] w-full rounded shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-3 px-4 overflow-hidden focus:outline-none focus:ring-2 focus:ring-slate-400"
+          className="group flex h-[40px] w-full items-center gap-3 overflow-hidden rounded bg-white px-4 shadow-sm transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-400 dark:bg-gray-800"
           onMouseEnter={() => setFocusedBookmarkId(bookmark.id)}
           onMouseLeave={() => setFocusedBookmarkId(null)}
         >
           <a
             href={bookmark.url}
-            className="flex items-center gap-3 min-w-0 flex-1"
+            className="flex min-w-0 flex-1 items-center gap-3"
             target="_blank"
             rel="noopener noreferrer"
             onFocus={() => setFocusedBookmarkId(bookmark.id)}
@@ -57,11 +58,11 @@ export const SortableBookmark = ({
             <img
               src={getFaviconUrl(bookmark.url!)}
               alt=""
-              className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform duration-200"
+              className="h-5 w-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"
               onError={(e) => handleFaviconError(e, bookmark.url!)}
               loading="lazy"
             />
-            <span className="text-sm text-gray-700 dark:text-gray-200 truncate">
+            <span className="truncate text-sm text-gray-700 dark:text-gray-200">
               {bookmark.title}
             </span>
           </a>
@@ -70,7 +71,7 @@ export const SortableBookmark = ({
             ref={setNodeRef}
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex-shrink-0"
+            className="flex-shrink-0 cursor-grab rounded p-1 hover:bg-gray-100 active:cursor-grabbing dark:hover:bg-gray-700"
           >
             <GripVertical className="h-4 w-4 text-gray-400" />
           </div>
